@@ -102,24 +102,160 @@ export const siteSetupFlow: Flow = {
 		const verticalsStepEnabled = isEnabled( 'signup/site-vertical-step' ) && isEnglishLocale;
 		const goalsStepEnabled = isEnabled( 'signup/goals-step' ) && isEnglishLocale;
 
-		// Set up Step progress for Woo flow - "Step 2 of 4"
-		if ( intent === 'sell' && storeType === 'power' ) {
+		//Set up the static percentage for the vertical & intent steps
+		if ( ! intent ) {
 			switch ( currentStep ) {
-				case 'storeAddress':
-					setStepProgress( { progress: 1, count: 4 } );
+				case 'vertical':
+					setStepProgress( { progress: 0, count: 15 } );
 					break;
-				case 'businessInfo':
-					setStepProgress( { progress: 2, count: 4 } );
-					break;
-				case 'wooConfirm':
-					setStepProgress( { progress: 3, count: 4 } );
-					break;
-				case 'processing':
-					setStepProgress( { progress: 4, count: 4 } );
+				case 'intent':
+					setStepProgress( { progress: 1, count: 15 } );
 					break;
 			}
+		}
+
+		// Set up Step progress for Woo flow - "Step 2 of 4"
+		if ( intent === 'sell' ) {
+			switch ( currentStep ) {
+				case 'vertical':
+					setStepProgress( { progress: 0, count: 15 } );
+					break;
+				case 'intent':
+					setStepProgress( { progress: 1, count: 15 } );
+					break;
+				case 'options':
+					setStepProgress( { progress: 1 / 15 + ( 2 / 8 ) * 15, count: 15 } );
+					break;
+				case 'storeFeatures':
+					setStepProgress( { progress: 1 / 15 + ( 3 / 8 ) * 15, count: 15 } );
+					break;
+			}
+			if ( storeType === 'simple' ) {
+				switch ( currentStep ) {
+					case 'designSetup':
+						setStepProgress( { progress: 1 / 15 + ( 4 / 6 ) * 15, count: 15 } );
+						break;
+					case 'processing':
+						setStepProgress( { progress: 15, count: 15 } );
+						break;
+				}
+			} else if ( storeType === 'power' ) {
+				switch ( currentStep ) {
+					case 'storeAddress':
+						setStepProgress( { progress: 1 / 15 + ( 4 / 8 ) * 15, count: 15 } );
+						break;
+					case 'businessInfo':
+						setStepProgress( { progress: 1 / 15 + ( 5 / 8 ) * 15, count: 15 } );
+						break;
+					case 'wooConfirm':
+						setStepProgress( { progress: 1 / 15 + ( 6 / 8 ) * 15, count: 15 } );
+						break;
+					case 'processing':
+						setStepProgress( { progress: 15, count: 15 } );
+						break;
+				}
+			}
+		} else if ( intent === 'write' ) {
+			switch ( currentStep ) {
+				case 'vertical':
+					setStepProgress( { progress: 0, count: 15 } );
+					break;
+				case 'intent':
+					setStepProgress( { progress: 1, count: 15 } );
+					break;
+				case 'options':
+					setStepProgress( { progress: 1 / 15 + ( 2 / 5 ) * 15, count: 15 } );
+					break;
+				case 'bloggerStartingPoint':
+					setStepProgress( { progress: 1 / 15 + ( 3 / 5 ) * 15, count: 15 } );
+					break;
+				case 'courses':
+					setStepProgress( { progress: 1 / 15 + ( 4 / 5 ) * 15, count: 15 } );
+					break;
+				case 'designSetup':
+					setStepProgress( { progress: 1 / 15 + ( 4 / 5 ) * 15, count: 15 } );
+					break;
+				case 'processing':
+					setStepProgress( { progress: 15, count: 15 } );
+					break;
+			}
+		} else if ( intent === 'build' ) {
+			switch ( currentStep ) {
+				case 'vertical':
+				case 'intent':
+					updateFlowProgress( { beginningStep: currentStep } );
+					break;
+				case 'designSetup':
+					updateFlowProgress( { middleProgress: { progress: 2, count: 4 } } );
+					// setStepProgress( { progress: 1 / 15 + ( 2 / 4 ) * 15, count: 15 } );
+					break;
+				case 'processing':
+					updateFlowProgress( { middleProgress: { progress: 3, count: 4 } } );
+					// setStepProgress( { progress: 15, count: 15 } );
+					break;
+			}
+		} else if ( intent === 'import' ) {
+			switch ( currentStep ) {
+				case 'vertical':
+					setStepProgress( { progress: 0, count: 15 } );
+					break;
+				case 'intent':
+					setStepProgress( { progress: 1, count: 15 } );
+					break;
+				case 'import':
+					setStepProgress( { progress: 1 / 15 + ( 2 / 5 ) * 15, count: 15 } );
+					break;
+				case 'importList':
+				case 'importReady':
+				case 'importReadyNot':
+				case 'importReadyWpcom':
+				case 'importReadyPreview': {
+					setStepProgress( { progress: 1 / 15 + ( 3 / 5 ) * 15, count: 15 } );
+					break;
+				}
+				case 'importerWix':
+				case 'importerBlogger':
+				case 'importerMedium':
+				case 'importerSquarespace':
+				case 'importerWordpress': {
+					setStepProgress( { progress: 1 / 15 + ( 4 / 5 ) * 15, count: 15 } );
+					break;
+				}
+			}
 		} else {
-			setStepProgress( undefined );
+			switch ( currentStep ) {
+				case 'vertical':
+					setStepProgress( { progress: 0, count: 15 } );
+					break;
+				case 'intent':
+					setStepProgress( { progress: 1, count: 15 } );
+					break;
+			}
+		}
+
+		function updateFlowProgress( flowProgress: {
+			beginningStep?: string;
+			middleProgress?: { progress: number; count: number };
+			endStep?: string;
+		} ) {
+			const MAX_STEPS = 15;
+			let beginningSegment = 0;
+			let middleSegment = 0;
+			const endSegment = 0;
+
+			if ( flowProgress.beginningStep ) {
+				const beginningSteps = [ 'vertical', 'intent' ];
+				beginningSegment = beginningSteps.indexOf( flowProgress.beginningStep );
+			}
+
+			if ( ! flowProgress.beginningStep && flowProgress.middleProgress ) {
+				middleSegment =
+					1 / MAX_STEPS +
+					( flowProgress.middleProgress.progress / flowProgress.middleProgress.count ) * MAX_STEPS;
+			}
+
+			const progress = beginningSegment + middleSegment + endSegment;
+			setStepProgress( { progress: progress, count: MAX_STEPS } );
 		}
 
 		const exitFlow = ( to: string ) => {
