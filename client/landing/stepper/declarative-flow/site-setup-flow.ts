@@ -146,7 +146,10 @@ export const siteSetupFlow: Flow = {
 			resetIntent();
 		};
 
-		function submit( providedDependencies: ProvidedDependencies = {}, ...params: string[] ) {
+		function submit(
+			providedDependencies: ProvidedDependencies = {},
+			...params: string[] | Record< string, any >[]
+		) {
 			recordSubmitStep( providedDependencies, intent, currentStep );
 
 			switch ( currentStep ) {
@@ -326,6 +329,10 @@ export const siteSetupFlow: Flow = {
 				}
 
 				case 'vertical': {
+					if ( params.length > 0 && params[ 0 ] && params[ 0 ].hasOwnProperty( 'error' ) ) {
+						return navigate( 'error', params[ 0 ] );
+					}
+
 					if ( goalsStepEnabled ) {
 						if ( goals.includes( SiteGoal.Import ) ) {
 							return navigate( 'import' );
