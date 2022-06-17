@@ -329,8 +329,8 @@ export const siteSetupFlow: Flow = {
 				}
 
 				case 'vertical': {
-					if ( params.length > 0 && params[ 0 ] && params[ 0 ].hasOwnProperty( 'error' ) ) {
-						return navigate( 'error', params[ 0 ] );
+					if ( params.length > 0 && params[ 0 ][ 0 ].hasOwnProperty( 'error' ) ) {
+						return navigate( 'error', params[ 0 ][ 0 ] );
 					}
 
 					if ( goalsStepEnabled ) {
