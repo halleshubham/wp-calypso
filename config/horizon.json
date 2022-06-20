@@ -13,6 +13,7 @@
 	"features": {
 		"ad-tracking": false,
 		"calypsoify/plugins": true,
+		"cancellation-offers": false,
 		"catch-js-errors": true,
 		"cloudflare": true,
 		"composite-checkout-testing": true,

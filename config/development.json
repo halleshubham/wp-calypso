@@ -28,6 +28,7 @@
 	"features": {
 		"ad-tracking": false,
 		"calypsoify/plugins": true,
+		"cancellation-offers": true,
 		"cloudflare": true,
 		"comments/filters-in-posts": true,
 		"current-site/domain-warning": true,
