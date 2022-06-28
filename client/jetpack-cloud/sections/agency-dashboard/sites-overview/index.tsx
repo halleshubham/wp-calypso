@@ -27,12 +27,14 @@ export default function SitesOverview(): ReactElement {
 
 	const { search, currentPage, filter } = useContext( SitesOverviewContext );
 
-	const { data, isError, isFetching, refetch } = useFetchDashboardSites(
+	const { data, isError, status, refetch } = useFetchDashboardSites(
 		isPartnerOAuthTokenLoaded,
 		search,
 		currentPage,
 		filter
 	);
+
+	const isInitialFetch = 'loading' === status;
 
 	useEffect( () => {
 		dispatch( recordTracksEvent( 'calypso_jetpack_agency_dashboard_visit' ) );
@@ -65,12 +67,12 @@ export default function SitesOverview(): ReactElement {
 					searchQuery={ search }
 					currentPage={ currentPage }
 					filter={ filter }
-					isFetching={ isFetching }
+					isFetching={ isInitialFetch }
 				/>
 				<SiteContent
 					data={ data }
 					isError={ isError }
-					isFetching={ isFetching }
+					isFetching={ isInitialFetch }
 					currentPage={ currentPage }
 				/>
 			</div>
