@@ -64,7 +64,7 @@ export default function ChooseServiceStep( props: Props ): React.ReactNode {
 			allowBackFirstStep={ true }
 			hideSkip
 			isHorizontalLayout={ false }
-			isWideLayout={ false }
+			isWideLayout={ true }
 			{ ...props }
 		/>
 	);
