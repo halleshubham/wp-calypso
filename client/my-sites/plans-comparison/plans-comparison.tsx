@@ -1,4 +1,4 @@
-import { TYPE_FREE, TYPE_FLEXIBLE, TYPE_PRO, TYPE_STARTER } from '@automattic/calypso-products';
+import { TYPE_FREE, TYPE_FLEXIBLE, TYPE_PRO, isMonthly } from '@automattic/calypso-products';
 import { Gridicon } from '@automattic/components';
 import { css, Global } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -491,10 +491,9 @@ export const PlansComparison: React.FunctionComponent< Props > = ( {
 								{ plans.map( ( plan, index ) => {
 									const isDomainConnectionDisabled =
 										selectedDomainConnection && [ TYPE_FREE, TYPE_FLEXIBLE ].includes( plan.type );
-
-									// todo: Replace plan type check with `isMonthly`.
 									const isMonthlyPlanDisabled =
-										'monthly' === intervalType && plan.type === TYPE_STARTER;
+										'monthly' === intervalType && ! isMonthly( plan.type );
+
 									return (
 										<PlansComparisonColHeader
 											key={ plan.getProductId() }
