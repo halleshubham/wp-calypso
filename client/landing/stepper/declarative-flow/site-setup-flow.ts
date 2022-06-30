@@ -25,7 +25,6 @@ import type { StepPath } from './internals/steps-repository';
 
 const SiteIntent = Onboard.SiteIntent;
 const SiteGoal = Onboard.SiteGoal;
-const { goalsToIntent } = Onboard.utils;
 
 export const siteSetupFlow: Flow = {
 	name: 'site-setup',
@@ -264,7 +263,7 @@ export const siteSetupFlow: Flow = {
 							return navigate( 'options' );
 						}
 						case 'difm': {
-							return exitFlow( `/start/website-design-services/?siteSlug=${ siteSlug }` );
+							return navigate( 'difmStartingPoint' );
 						}
 						default: {
 							return navigate( submittedIntent as StepPath );
@@ -401,8 +400,6 @@ export const siteSetupFlow: Flow = {
 					} else if ( intent === 'write' ) {
 						// this means we came from write => blogger staring point => choose a design
 						return navigate( 'bloggerStartingPoint' );
-					} else if ( intent === 'difm' ) {
-						return navigate( 'difmStartingPoint' );
 					}
 
 					if ( goalsStepEnabled ) {
@@ -441,6 +438,9 @@ export const siteSetupFlow: Flow = {
 					return navigate( 'import' );
 
 				case 'vertical':
+					if ( intent === 'difm' ) {
+						return navigate( 'difmStartingPoint' );
+					}
 					if ( goalsStepEnabled ) {
 						return navigate( 'goals' );
 					}
@@ -490,21 +490,11 @@ export const siteSetupFlow: Flow = {
 					return navigate( 'importList' );
 
 				case 'difmStartingPoint': {
-					const intent = goalsToIntent( goals.filter( ( goal ) => goal !== SiteGoal.DIFM ) );
-					setIntent( intent );
-
 					if ( verticalsStepEnabled ) {
 						return navigate( 'vertical' );
 					}
 
-					switch ( intent ) {
-						case SiteIntent.Write:
-						case SiteIntent.Sell:
-							return navigate( 'options' );
-						case SiteIntent.Build:
-						default:
-							return navigate( 'designSetup' );
-					}
+					return navigate( 'designSetup' );
 				}
 
 				default:
