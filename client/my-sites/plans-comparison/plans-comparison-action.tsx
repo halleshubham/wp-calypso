@@ -6,6 +6,7 @@ import {
 	PLAN_FREE,
 	PLAN_WPCOM_FLEXIBLE,
 	PLAN_WPCOM_STARTER,
+	PLAN_WPCOM_PRO_MONTHLY,
 } from '@automattic/calypso-products';
 import { Button } from '@automattic/components';
 import classNames from 'classnames';
@@ -36,7 +37,7 @@ function getButtonText( props: Partial< Props >, translate: TranslateFunc ): Tra
 	const planTitle = plan?.getTitle();
 	const planSlug = plan?.getStoreSlug();
 
-	if ( planSlug === PLAN_WPCOM_PRO ) {
+	if ( [ PLAN_WPCOM_PRO, PLAN_WPCOM_PRO_MONTHLY ].includes( planSlug ) ) {
 		return 'en' === i18n.getLocaleSlug() || i18n.hasTranslation( 'Choose Pro' )
 			? translate( 'Choose Pro' )
 			: translate( 'Try Pro risk-free' );

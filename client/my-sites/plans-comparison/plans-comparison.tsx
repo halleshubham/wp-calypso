@@ -237,6 +237,7 @@ export const globalOverrides = css`
 const ComparisonTable = styled.table< TableProps >`
 	border-collapse: collapse;
 	max-width: ${ ( { hideFreePlan } ) => ( hideFreePlan ? 728 : 980 ) }px;
+	margin-top: 20px;
 
 	.is-section-plans & {
 		html[dir='ltr'] & {
@@ -404,9 +405,9 @@ const PlansComparisonToggle = styled.tbody`
 		}
 	}
 `;
-
 interface Props {
 	isInSignup?: boolean;
+	intervalType?: string;
 	selectedSiteId?: number;
 	selectedSiteSlug?: string;
 	selectedDomainConnection?: boolean;
@@ -430,6 +431,7 @@ export const PlansComparison: React.FunctionComponent< Props > = ( {
 	isInSignup = false,
 	selectedSiteId,
 	selectedSiteSlug,
+	intervalType,
 	selectedDomainConnection,
 	purchaseId,
 	hideFreePlan,
@@ -449,7 +451,7 @@ export const PlansComparison: React.FunctionComponent< Props > = ( {
 	 * @todo clk Use of `hideFreePlan` will cause breakage if we are not showing the free plan at all.
 	 * Potentially remove `hideFreePlan` logic alltogether when plans are finalised.
 	 */
-	const plans = usePlans( hideFreePlan );
+	const plans = usePlans( hideFreePlan, intervalType );
 	const prices = usePlanPrices( plans );
 	const translate = useTranslate();
 
@@ -475,87 +477,90 @@ export const PlansComparison: React.FunctionComponent< Props > = ( {
 		<>
 			<Global styles={ globalOverrides } />
 			{ ! isReadingCookie && (
-				<ComparisonTable
-					firstColWidth={ 31 }
-					planCount={ plans.length }
-					hideFreePlan={ hideFreePlan && ! isStarterPlanEnabled() }
-				>
-					<THead isInSignup={ isInSignup }>
-						<tr>
-							<td className={ `is-first` }>
-								<br />
-							</td>
-							{ plans.map( ( plan, index ) => (
-								<PlansComparisonColHeader
-									key={ plan.getProductId() }
-									plan={ plan }
-									currencyCode={ currencyCode }
-									price={ prices[ index ].price }
-									originalPrice={ prices[ index ].originalPrice }
-									translate={ translate }
-									isExperiment={ isUsUser }
-								>
-									{ selectedDomainConnection && <PlansDomainConnectionInfo plan={ plan } /> }
-									<PlansComparisonAction
-										currentSitePlanSlug={ sitePlan?.product_slug }
+				<>
+					<ComparisonTable
+						firstColWidth={ 31 }
+						planCount={ plans.length }
+						hideFreePlan={ hideFreePlan && ! isStarterPlanEnabled() }
+					>
+						<THead isInSignup={ isInSignup }>
+							<tr>
+								<td className={ `is-first` }>
+									<br />
+								</td>
+								{ plans.map( ( plan, index ) => (
+									<PlansComparisonColHeader
+										key={ plan.getProductId() }
 										plan={ plan }
-										isInSignup={ isInSignup }
-										isPrimary={ plan.type === TYPE_PRO }
-										isCurrentPlan={ sitePlan?.product_slug === plan.getStoreSlug() }
-										manageHref={ manageHref }
-										disabled={
-											selectedDomainConnection && [ TYPE_FREE, TYPE_FLEXIBLE ].includes( plan.type )
-										}
-										onClick={ () => onSelectPlan( planToCartItem( plan ) ) }
-									/>
-								</PlansComparisonColHeader>
+										currencyCode={ currencyCode }
+										price={ prices[ index ].price }
+										originalPrice={ prices[ index ].originalPrice }
+										translate={ translate }
+										isExperiment={ isUsUser }
+									>
+										{ selectedDomainConnection && <PlansDomainConnectionInfo plan={ plan } /> }
+										<PlansComparisonAction
+											currentSitePlanSlug={ sitePlan?.product_slug }
+											plan={ plan }
+											isInSignup={ isInSignup }
+											isPrimary={ plan.type === TYPE_PRO }
+											isCurrentPlan={ sitePlan?.product_slug === plan.getStoreSlug() }
+											manageHref={ manageHref }
+											disabled={
+												selectedDomainConnection &&
+												[ TYPE_FREE, TYPE_FLEXIBLE ].includes( plan.type )
+											}
+											onClick={ () => onSelectPlan( planToCartItem( plan ) ) }
+										/>
+									</PlansComparisonColHeader>
+								) ) }
+							</tr>
+						</THead>
+						<PlansComparisonRows>
+							{ planComparisonFeatures.slice( featureSliceStart, 12 ).map( ( feature ) => (
+								<PlansComparisonRow
+									feature={ feature }
+									plans={ plans }
+									isLegacySiteWithHigherLimits={ legacySiteWithHigherLimits }
+									key={ feature.features[ 0 ] }
+									isExperiment={ isUsUser }
+								/>
 							) ) }
-						</tr>
-					</THead>
-					<PlansComparisonRows>
-						{ planComparisonFeatures.slice( featureSliceStart, 12 ).map( ( feature ) => (
-							<PlansComparisonRow
-								feature={ feature }
-								plans={ plans }
-								isLegacySiteWithHigherLimits={ legacySiteWithHigherLimits }
-								key={ feature.features[ 0 ] }
-								isExperiment={ isUsUser }
-							/>
-						) ) }
-					</PlansComparisonRows>
-					<PlansComparisonCollapsibleRows collapsed={ showCollapsibleRows }>
-						{ planComparisonFeatures.slice( 12 ).map( ( feature ) => (
-							<PlansComparisonRow
-								feature={ feature }
-								plans={ plans }
-								isLegacySiteWithHigherLimits={ legacySiteWithHigherLimits }
-								key={ feature.features[ 0 ] }
-								isExperiment={ isUsUser }
-							/>
-						) ) }
-					</PlansComparisonCollapsibleRows>
-					<PlansComparisonToggle>
-						<tr>
-							{ /* eslint-disable-next-line wpcalypso/jsx-classname-namespace */ }
-							<th className="is-first"></th>
-							<td colSpan={ 2 }>
-								<button onClick={ toggleCollapsibleRows }>
-									{ showCollapsibleRows ? (
-										<>
-											<Gridicon size={ 12 } icon="chevron-up" />
-											{ translate( 'Hide full plan comparison' ) }
-										</>
-									) : (
-										<>
-											<Gridicon size={ 12 } icon="chevron-down" />
-											{ translate( 'Show full plan comparison' ) }
-										</>
-									) }
-								</button>
-							</td>
-						</tr>
-					</PlansComparisonToggle>
-				</ComparisonTable>
+						</PlansComparisonRows>
+						<PlansComparisonCollapsibleRows collapsed={ showCollapsibleRows }>
+							{ planComparisonFeatures.slice( 12 ).map( ( feature ) => (
+								<PlansComparisonRow
+									feature={ feature }
+									plans={ plans }
+									isLegacySiteWithHigherLimits={ legacySiteWithHigherLimits }
+									key={ feature.features[ 0 ] }
+									isExperiment={ isUsUser }
+								/>
+							) ) }
+						</PlansComparisonCollapsibleRows>
+						<PlansComparisonToggle>
+							<tr>
+								{ /* eslint-disable-next-line wpcalypso/jsx-classname-namespace */ }
+								<th className="is-first"></th>
+								<td colSpan={ 2 }>
+									<button onClick={ toggleCollapsibleRows }>
+										{ showCollapsibleRows ? (
+											<>
+												<Gridicon size={ 12 } icon="chevron-up" />
+												{ translate( 'Hide full plan comparison' ) }
+											</>
+										) : (
+											<>
+												<Gridicon size={ 12 } icon="chevron-down" />
+												{ translate( 'Show full plan comparison' ) }
+											</>
+										) }
+									</button>
+								</td>
+							</tr>
+						</PlansComparisonToggle>
+					</ComparisonTable>
+				</>
 			) }
 		</>
 	);
