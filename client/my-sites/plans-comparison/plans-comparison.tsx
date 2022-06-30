@@ -1,4 +1,4 @@
-import { TYPE_FREE, TYPE_FLEXIBLE, TYPE_PRO } from '@automattic/calypso-products';
+import { TYPE_FREE, TYPE_FLEXIBLE, TYPE_PRO, TYPE_STARTER } from '@automattic/calypso-products';
 import { Gridicon } from '@automattic/components';
 import { css, Global } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -488,32 +488,37 @@ export const PlansComparison: React.FunctionComponent< Props > = ( {
 								<td className={ `is-first` }>
 									<br />
 								</td>
-								{ plans.map( ( plan, index ) => (
-									<PlansComparisonColHeader
-										key={ plan.getProductId() }
-										plan={ plan }
-										currencyCode={ currencyCode }
-										price={ prices[ index ].price }
-										originalPrice={ prices[ index ].originalPrice }
-										translate={ translate }
-										isExperiment={ isUsUser }
-									>
-										{ selectedDomainConnection && <PlansDomainConnectionInfo plan={ plan } /> }
-										<PlansComparisonAction
-											currentSitePlanSlug={ sitePlan?.product_slug }
+								{ plans.map( ( plan, index ) => {
+									const isDomainConnectionDisabled =
+										selectedDomainConnection && [ TYPE_FREE, TYPE_FLEXIBLE ].includes( plan.type );
+
+									// todo: Replace plan type check with `isMonthly`.
+									const isMonthlyPlanDisabled =
+										'monthly' === intervalType && plan.type === TYPE_STARTER;
+									return (
+										<PlansComparisonColHeader
+											key={ plan.getProductId() }
 											plan={ plan }
-											isInSignup={ isInSignup }
-											isPrimary={ plan.type === TYPE_PRO }
-											isCurrentPlan={ sitePlan?.product_slug === plan.getStoreSlug() }
-											manageHref={ manageHref }
-											disabled={
-												selectedDomainConnection &&
-												[ TYPE_FREE, TYPE_FLEXIBLE ].includes( plan.type )
-											}
-											onClick={ () => onSelectPlan( planToCartItem( plan ) ) }
-										/>
-									</PlansComparisonColHeader>
-								) ) }
+											currencyCode={ currencyCode }
+											price={ prices[ index ].price }
+											originalPrice={ prices[ index ].originalPrice }
+											translate={ translate }
+											isExperiment={ isUsUser }
+										>
+											{ selectedDomainConnection && <PlansDomainConnectionInfo plan={ plan } /> }
+											<PlansComparisonAction
+												currentSitePlanSlug={ sitePlan?.product_slug }
+												plan={ plan }
+												isInSignup={ isInSignup }
+												isPrimary={ plan.type === TYPE_PRO }
+												isCurrentPlan={ sitePlan?.product_slug === plan.getStoreSlug() }
+												manageHref={ manageHref }
+												disabled={ isDomainConnectionDisabled || isMonthlyPlanDisabled }
+												onClick={ () => onSelectPlan( planToCartItem( plan ) ) }
+											/>
+										</PlansComparisonColHeader>
+									);
+								} ) }
 							</tr>
 						</THead>
 						<PlansComparisonRows>
