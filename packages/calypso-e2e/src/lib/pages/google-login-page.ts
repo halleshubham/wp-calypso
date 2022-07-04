@@ -42,6 +42,8 @@ export class GoogleLoginPage {
 	 */
 	async enterEmail( email: string ): Promise< void > {
 		const locator = this.page.locator( selectors.emailInput );
+		await locator.waitFor( { state: 'visible' } );
+
 		await locator.type( email );
 	}
 
@@ -51,6 +53,7 @@ export class GoogleLoginPage {
 	 */
 	async enterPassword( password: string ): Promise< void > {
 		const locator = this.page.locator( selectors.passwordInput );
+		await locator.waitFor( { state: 'visible' } );
 		await locator.type( password );
 	}
 
