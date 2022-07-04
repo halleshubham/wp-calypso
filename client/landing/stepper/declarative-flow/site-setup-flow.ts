@@ -117,110 +117,106 @@ export const siteSetupFlow: Flow = {
 		// Set up Step progress for Woo flow - "Step 2 of 4"
 		if ( intent === 'sell' ) {
 			switch ( currentStep ) {
+				case 'goals':
 				case 'vertical':
-					setStepProgress( { progress: 0, count: 15 } );
-					break;
 				case 'intent':
-					setStepProgress( { progress: 1, count: 15 } );
+					updateFlowProgress( { beginningStep: currentStep } );
 					break;
 				case 'options':
-					setStepProgress( { progress: 1 / 15 + ( 2 / 8 ) * 15, count: 15 } );
+					updateFlowProgress( { middleProgress: { progress: 2, count: 8 } } );
 					break;
 				case 'storeFeatures':
-					setStepProgress( { progress: 1 / 15 + ( 3 / 8 ) * 15, count: 15 } );
+					updateFlowProgress( { middleProgress: { progress: 3, count: 8 } } );
 					break;
 			}
 			if ( storeType === 'simple' ) {
 				switch ( currentStep ) {
 					case 'designSetup':
-						setStepProgress( { progress: 1 / 15 + ( 4 / 6 ) * 15, count: 15 } );
+						updateFlowProgress( { middleProgress: { progress: 4, count: 5 } } );
 						break;
 					case 'processing':
-						setStepProgress( { progress: 15, count: 15 } );
+						updateFlowProgress( { endStep: currentStep } );
 						break;
 				}
 			} else if ( storeType === 'power' ) {
 				switch ( currentStep ) {
 					case 'storeAddress':
-						setStepProgress( { progress: 1 / 15 + ( 4 / 8 ) * 15, count: 15 } );
+						updateFlowProgress( { middleProgress: { progress: 4, count: 7 } } );
 						break;
 					case 'businessInfo':
-						setStepProgress( { progress: 1 / 15 + ( 5 / 8 ) * 15, count: 15 } );
+						updateFlowProgress( { middleProgress: { progress: 5, count: 7 } } );
 						break;
 					case 'wooConfirm':
-						setStepProgress( { progress: 1 / 15 + ( 6 / 8 ) * 15, count: 15 } );
+						updateFlowProgress( { middleProgress: { progress: 6, count: 7 } } );
 						break;
 					case 'processing':
-						setStepProgress( { progress: 15, count: 15 } );
+						updateFlowProgress( { endStep: currentStep } );
 						break;
 				}
 			}
 		} else if ( intent === 'write' ) {
 			switch ( currentStep ) {
+				case 'goals':
 				case 'vertical':
-					setStepProgress( { progress: 0, count: 15 } );
-					break;
 				case 'intent':
-					setStepProgress( { progress: 1, count: 15 } );
+					updateFlowProgress( { beginningStep: currentStep } );
 					break;
 				case 'options':
-					setStepProgress( { progress: 1 / 15 + ( 2 / 5 ) * 15, count: 15 } );
+					updateFlowProgress( { middleProgress: { progress: 2, count: 5 } } );
 					break;
 				case 'bloggerStartingPoint':
-					setStepProgress( { progress: 1 / 15 + ( 3 / 5 ) * 15, count: 15 } );
+					updateFlowProgress( { middleProgress: { progress: 3, count: 5 } } );
 					break;
 				case 'courses':
-					setStepProgress( { progress: 1 / 15 + ( 4 / 5 ) * 15, count: 15 } );
-					break;
 				case 'designSetup':
-					setStepProgress( { progress: 1 / 15 + ( 4 / 5 ) * 15, count: 15 } );
+					updateFlowProgress( { middleProgress: { progress: 4, count: 5 } } );
 					break;
 				case 'processing':
-					setStepProgress( { progress: 15, count: 15 } );
+					updateFlowProgress( { endStep: currentStep } );
 					break;
 			}
 		} else if ( intent === 'build' ) {
 			switch ( currentStep ) {
+				case 'goals':
 				case 'vertical':
 				case 'intent':
 					updateFlowProgress( { beginningStep: currentStep } );
 					break;
 				case 'designSetup':
-					updateFlowProgress( { middleProgress: { progress: 2, count: 4 } } );
-					// setStepProgress( { progress: 1 / 15 + ( 2 / 4 ) * 15, count: 15 } );
+					updateFlowProgress( { middleProgress: { progress: 2, count: 3 } } );
 					break;
 				case 'processing':
-					updateFlowProgress( { middleProgress: { progress: 3, count: 4 } } );
-					// setStepProgress( { progress: 15, count: 15 } );
+					updateFlowProgress( { endStep: currentStep } );
 					break;
 			}
 		} else if ( intent === 'import' ) {
 			switch ( currentStep ) {
+				case 'goals':
 				case 'vertical':
-					setStepProgress( { progress: 0, count: 15 } );
-					break;
 				case 'intent':
-					setStepProgress( { progress: 1, count: 15 } );
+					updateFlowProgress( { beginningStep: currentStep } );
 					break;
 				case 'import':
-					setStepProgress( { progress: 1 / 15 + ( 2 / 5 ) * 15, count: 15 } );
+					updateFlowProgress( { middleProgress: { progress: 2, count: 5 } } );
 					break;
 				case 'importList':
 				case 'importReady':
 				case 'importReadyNot':
 				case 'importReadyWpcom':
 				case 'importReadyPreview': {
-					setStepProgress( { progress: 1 / 15 + ( 3 / 5 ) * 15, count: 15 } );
+					updateFlowProgress( { middleProgress: { progress: 3, count: 5 } } );
 					break;
 				}
 				case 'importerWix':
 				case 'importerBlogger':
 				case 'importerMedium':
 				case 'importerSquarespace':
-				case 'importerWordpress': {
-					setStepProgress( { progress: 1 / 15 + ( 4 / 5 ) * 15, count: 15 } );
+				case 'importerWordpress':
+					updateFlowProgress( { middleProgress: { progress: 4, count: 5 } } );
 					break;
-				}
+				case 'processing':
+					updateFlowProgress( { endStep: currentStep } );
+					break;
 			}
 		} else {
 			switch ( currentStep ) {
@@ -239,12 +235,16 @@ export const siteSetupFlow: Flow = {
 			endStep?: string;
 		} ) {
 			const MAX_STEPS = 15;
-			let beginningSegment = 0;
+			let beginningSegment = 1 / MAX_STEPS;
 			let middleSegment = 0;
 			const endSegment = 0;
 
 			if ( flowProgress.beginningStep ) {
-				const beginningSteps = [ 'vertical', 'intent' ];
+				const beginningSteps = [
+					...( goalsStepEnabled ? [ 'goals' ] : [] ),
+					...( verticalsStepEnabled ? [ 'vertical' ] : [] ),
+					...( ! goalsStepEnabled ? [ 'intent' ] : [] ),
+				];
 				beginningSegment = beginningSteps.indexOf( flowProgress.beginningStep );
 			}
 
@@ -254,7 +254,12 @@ export const siteSetupFlow: Flow = {
 					( flowProgress.middleProgress.progress / flowProgress.middleProgress.count ) * MAX_STEPS;
 			}
 
-			const progress = beginningSegment + middleSegment + endSegment;
+			let progress = beginningSegment + middleSegment + endSegment;
+
+			if ( flowProgress.endStep ) {
+				progress = MAX_STEPS;
+			}
+
 			setStepProgress( { progress: progress, count: MAX_STEPS } );
 		}
 
@@ -437,7 +442,7 @@ export const siteSetupFlow: Flow = {
 					const [ checkoutUrl ] = params;
 
 					if ( checkoutUrl ) {
-						return exitFlow( checkoutUrl.toString() );
+						// return exitFlow( checkoutUrl.toString() );
 					}
 
 					return navigate( 'wooTransfer' );
