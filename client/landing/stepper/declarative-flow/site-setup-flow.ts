@@ -131,6 +131,8 @@ export const siteSetupFlow: Flow = {
 						updateFlowProgress( { endStep: currentStep } );
 						break;
 				}
+
+				break;
 			}
 			case SiteIntent.Build: {
 				switch ( currentStep ) {
@@ -141,6 +143,8 @@ export const siteSetupFlow: Flow = {
 						updateFlowProgress( { endStep: currentStep } );
 						break;
 				}
+
+				break;
 			}
 			case SiteIntent.Sell: {
 				switch ( currentStep ) {
@@ -177,6 +181,8 @@ export const siteSetupFlow: Flow = {
 							break;
 					}
 				}
+
+				break;
 			}
 			case SiteIntent.Import: {
 				switch ( currentStep ) {
@@ -202,6 +208,8 @@ export const siteSetupFlow: Flow = {
 						updateFlowProgress( { endStep: currentStep } );
 						break;
 				}
+
+				break;
 			}
 		}
 
