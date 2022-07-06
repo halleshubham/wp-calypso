@@ -424,7 +424,7 @@ export const siteSetupFlow: Flow = {
 					const [ checkoutUrl ] = params;
 
 					if ( checkoutUrl ) {
-						// return exitFlow( checkoutUrl.toString() );
+						return exitFlow( checkoutUrl.toString() );
 					}
 
 					return navigate( 'wooTransfer' );
