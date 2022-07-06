@@ -1,4 +1,4 @@
-import { Gridicon } from '@automattic/components';
+import { Gridicon, ListTile } from '@automattic/components';
 import styled from '@emotion/styled';
 import { useI18n } from '@wordpress/react-i18n';
 import SiteIcon from 'calypso/blocks/site-icon';
@@ -71,19 +71,21 @@ export function SitesTable( { buildSiteUrl, className, sites }: SitesTableProps 
 				{ sites.map( ( site ) => (
 					<Row key={ site.ID }>
 						<td>
-							<div style={ { display: 'flex' } }>
-								<SiteIcon siteId={ site.ID } size={ 50 } />
-								<div style={ { marginLeft: '20px' } }>
+							<ListTile
+								leading={ <SiteIcon siteId={ site.ID } size={ 50 } /> }
+								title={
 									<SiteName>
 										<a href={ buildSiteUrl ? buildSiteUrl( site ) : site.URL }>
 											{ site.name ? site.name : __( '(No Site Title)' ) }
 										</a>
 									</SiteName>
+								}
+								subtitle={
 									<SiteUrl href={ site.URL } target="_blank" rel="noreferrer">
 										{ displaySiteUrl( site.URL ) }
 									</SiteUrl>
-								</div>
-							</div>
+								}
+							/>
 						</td>
 						<td className="sites-table__mobile-hidden">{ site.plan.product_name_short }</td>
 						<td className="sites-table__mobile-hidden"></td>
