@@ -10,6 +10,7 @@ import formatCurrency from '@automattic/format-currency';
 import { NextButton } from '@automattic/onboarding';
 import styled from '@emotion/styled';
 import { Button } from '@wordpress/components';
+import debugFactory from 'debug';
 import { useTranslate } from 'i18n-calypso';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
@@ -223,6 +224,8 @@ const Step = ( {
 	);
 };
 
+const debug = debugFactory( 'calypso:difm-landing' );
+
 export default function DIFMLanding( {
 	onSubmit,
 	onSkip,
@@ -241,6 +244,11 @@ export default function DIFMLanding( {
 	const displayCost = hasPriceDataLoaded
 		? formatCurrency( productCost, currencyCode, { stripZeros: true } )
 		: '';
+	debug( 'productCost', productCost );
+	debug( 'currencyCode', currencyCode );
+	debug( 'hasPriceDataLoaded', hasPriceDataLoaded );
+	debug( 'isLoading', isLoading );
+	debug( 'displayCost', displayCost );
 
 	const faqHeader = useRef( null );
 	const [ isFAQSectionOpen, setIsFAQSectionOpen ] = useState( false );
